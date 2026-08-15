@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-900 text-white flex items-center justify-center min-h-screen">
+<body class="bg-slate-900 text-white flex items-center justify-center min-h-screen p-4">
     <div class="bg-slate-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700">
         <h2 id="form-title" class="text-2xl font-bold mb-6 text-center text-indigo-400">Login to EarnPro</h2>
         
@@ -37,15 +37,15 @@
             <button type="submit" id="submit-btn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200">Login</button>
         </form>
 
-        <!-- Switch Links -->
+        <!-- Switch & Forgot Links -->
         <div class="mt-6 text-center text-sm space-y-2">
-            <p><a href="#" onclick="toggleMode()" id="switch-mode" class="text-indigo-400 hover:underline">Don't have an account? Register</a></p>
-            <p><a href="#" onclick="forgotPassword()" class="text-slate-400 hover:underline">Forgot Password?</a></p>
+            <p><a href="javascript:void(0);" onclick="toggleMode()" id="switch-mode" class="text-indigo-400 hover:underline">Don't have an account? Register</a></p>
+            <p><a href="javascript:void(0);" onclick="forgotPassword()" class="text-slate-400 hover:underline">Forgot Password?</a></p>
         </div>
     </div>
 
     <!-- Custom Alert Popup -->
-    <div id="custom-alert" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center p-4">
+    <div id="custom-alert" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
         <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl max-w-sm w-full text-center space-y-4">
             <div class="w-12 h-12 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">✓</div>
             <h3 class="text-xl font-bold text-white">Welcome!</h3>
