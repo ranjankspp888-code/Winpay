@@ -54,6 +54,146 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://nzjpeofntgmmxuwpvgrb.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_EMtwDM6VuGCoWElwvE2K7w_GvjIJGg-';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let isRegisterMode = false;
+
+        // Auto-fill Refer Code from URL on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if (ref) {
+                isRegisterMode = false;
+                toggleMode();
+                const referInput = document.getElementById('refer_code');
+                if (referInput) referInput.value = ref;
+            }
+        });
+
+        // Toggle between Login and Register Form Fields
+        function toggleMode() {
+            isRegisterMode = !isRegisterMode;
+            
+            const title = document.getElementById('form-title');
+            const btn = document.getElementById('submit-btn');
+            const switchText = document.getElementById('switch-mode');
+            
+            if (title) title.innerText = isRegisterMode ? "Register to EarnPro" : "Login to EarnPro";
+            if (btn) btn.innerText = isRegisterMode ? "Register" : "Login";
+            if (switchText) switchText.innerText = isRegisterMode ? "Already have an account? Login" : "Don't have an account? Register";
+            
+            const nameField = document.getElementById('name-field');
+            const emailField = document.getElementById('email-field');
+            const referField = document.getElementById('refer-field');
+            
+            if (nameField) nameField.classList.toggle('hidden', !isRegisterMode);
+            if (emailField) emailField.classList.toggle('hidden', !isRegisterMode);
+            if (referField) referField.classList.toggle('hidden', !isRegisterMode);
+        }
+
+        // Generate 5-digit Unique User ID
+        function generateUniqueId() {
+            return Math.floor(10000 + Math.random() * 90000).toString();
+        }
+
+        // Handle Authentication (Login / Register)
+        async function handleAuth(event) {
+            event.preventDefault();
+            const mobile = document.getElementById('mobile').value;
+            const password = document.getElementById('password').value;
+
+            if (isRegisterMode) {
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const referCodeInput = document.getElementById('refer_code').value;
+                const userId = generateUniqueId();
+                
+                let welcomeBonus = 50;
+                try {
+                    const { data: settings } = await supabase.from('settings').select('value').eq('key', 'config').single();
+                    if (settings && settings.value) {
+                        welcomeBonus = settings.value.welcome_bonus || 50;
+                    }
+                } catch (err) {
+                    console.log("Using default welcome bonus");
+                }
+
+                const { error } = await supabase.from('users').insert([{
+                    user_id: userId,
+                    name: name,
+                    mobile: mobile,
+                    email: email,
+                    password: password,
+                    refer_code: userId,
+                    referred_by: referCodeInput || null,
+                    wallet: welcomeBonus
+                }]);
+
+                if (error) {
+                    alert('Registration Error: ' + error.message);
+                    return;
+                }
+
+                // Show Custom Alert Popup
+                const alertContent = document.getElementById('alert-content');
+                const customAlert = document.getElementById('custom-alert');
+                
+                if (alertContent) {
+                    alertContent.innerHTML = `
+                        <p><b>User Name:</b> ${name}</p>
+                        <p><b>User ID:</b> ${userId}</p>
+                        <p><b>Password:</b> ${password}</p>
+                        <p class="text-green-400 mt-2">Welcome Bonus ₹${welcomeBonus} added to wallet!</p>
+                    `;
+                }
+                if (customAlert) customAlert.classList.remove('hidden');
+                localStorage.setItem('currentUser', JSON.stringify({ user_id: userId, name, mobile, email }));
+            } else {
+                // Login Logic
+                const { data, error } = await supabase.from('users').select('*').eq('mobile', mobile).eq('password', password).single();
+                if (error || !data) {
+                    alert('Invalid Mobile Number or Password');
+                    return;
+                }
+                localStorage.setItem('currentUser', JSON.stringify(data));
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Forgot Password Logic
+        async function forgotPassword() {
+            const inputVal = prompt("Enter your registered Mobile Number or Email:");
+            if (!inputVal) return;
+
+            const { data, error } = await supabase.from('users')
+                .select('*')
+                .or(`mobile.eq.${inputVal},email.eq.${inputVal}`)
+                .single();
+
+            if (error || !data) {
+                alert('No account found with this details.');
+                return;
+            }
+
+            if (!data.email) {
+                alert('No email address found for this account.');
+                return;
+            }
+
+            const subject = encodeURIComponent("Your EarnPro Password Recovery");
+            const body = encodeURIComponent(`Hello ${data.name},\n\nYour Account Details:\nUser ID: ${data.user_id}\nMobile: ${data.mobile}\nPassword: ${data.password}`);
+            
+            window.location.href = `mailto:${data.email}?subject=${subject}&body=${body}`;
+            alert('Email app opened. Send the email to receive your password.');
+        }
+
+        function closeAlert() {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
 </body>
 </html>
