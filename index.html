@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register - EarnPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-900 text-white flex items-center justify-center min-h-screen">
+    <div class="bg-slate-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700">
+        <h2 id="form-title" class="text-2xl font-bold mb-6 text-center text-indigo-400">Login to EarnPro</h2>
+        
+        <!-- Form -->
+        <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
+            <div id="name-field" class="hidden">
+                <label class="block text-sm font-medium mb-1">Full Name</label>
+                <input type="text" id="name" class="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Mobile Number</label>
+                <input type="text" id="mobile" required class="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-indigo-500">
+            </div>
+            <div id="email-field" class="hidden">
+                <label class="block text-sm font-medium mb-1">Email Address</label>
+                <input type="email" id="email" class="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Password</label>
+                <input type="password" id="password" required class="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-indigo-500">
+            </div>
+            <div id="refer-field" class="hidden">
+                <label class="block text-sm font-medium mb-1">Referral Code</label>
+                <input type="text" id="refer_code" class="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-indigo-500">
+            </div>
+            
+            <button type="submit" id="submit-btn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition duration-200">Login</button>
+        </form>
+
+        <!-- Switch Links -->
+        <div class="mt-6 text-center text-sm space-y-2">
+            <p><a href="#" onclick="toggleMode()" id="switch-mode" class="text-indigo-400 hover:underline">Don't have an account? Register</a></p>
+            <p><a href="#" onclick="forgotPassword()" class="text-slate-400 hover:underline">Forgot Password?</a></p>
+        </div>
+    </div>
+
+    <!-- Custom Alert Popup -->
+    <div id="custom-alert" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl max-w-sm w-full text-center space-y-4">
+            <div class="w-12 h-12 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">✓</div>
+            <h3 class="text-xl font-bold text-white">Welcome!</h3>
+            <div id="alert-content" class="text-slate-300 text-sm space-y-1"></div>
+            <button onclick="closeAlert()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold">Continue to Dashboard</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
