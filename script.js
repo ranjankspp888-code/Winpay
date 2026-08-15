@@ -1,6 +1,6 @@
 // Supabase Configuration (Apna Project URL aur Anon Key yahan dalein)
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://nzjpeofntgmmxuwpvgrb.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_EMtwDM6VuGCoWElwvE2K7w_GvjIJGg-';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let isRegisterMode = false;
