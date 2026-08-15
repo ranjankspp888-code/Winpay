@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Register - EarnPro</title>
+    <title>Login & Register - Winpay</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-900 text-white flex items-center justify-center min-h-screen p-4">
     <div class="bg-slate-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700">
-        <h2 id="form-title" class="text-2xl font-bold mb-6 text-center text-indigo-400">Login to EarnPro</h2>
+        <h2 id="form-title" class="text-2xl font-bold mb-6 text-center text-indigo-400">Login to Winpay</h2>
         
         <!-- Form -->
         <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
@@ -55,14 +55,12 @@
     </div>
 
     <script>
-        // Supabase Configuration
         const SUPABASE_URL = 'https://nzjpeofntgmmxuwpvgrb.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_EMtwDM6VuGCoWElwvE2K7w_GvjIJGg-';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let isRegisterMode = false;
 
-        // Auto-fill Refer Code from URL on load
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
@@ -74,15 +72,13 @@
             }
         });
 
-        // Toggle between Login and Register Form Fields
         function toggleMode() {
             isRegisterMode = !isRegisterMode;
-            
             const title = document.getElementById('form-title');
             const btn = document.getElementById('submit-btn');
             const switchText = document.getElementById('switch-mode');
             
-            if (title) title.innerText = isRegisterMode ? "Register to EarnPro" : "Login to EarnPro";
+            if (title) title.innerText = isRegisterMode ? "Register to Winpay" : "Login to Winpay";
             if (btn) btn.innerText = isRegisterMode ? "Register" : "Login";
             if (switchText) switchText.innerText = isRegisterMode ? "Already have an account? Login" : "Don't have an account? Register";
             
@@ -95,12 +91,10 @@
             if (referField) referField.classList.toggle('hidden', !isRegisterMode);
         }
 
-        // Generate 5-digit Unique User ID
         function generateUniqueId() {
             return Math.floor(10000 + Math.random() * 90000).toString();
         }
 
-        // Handle Authentication (Login / Register)
         async function handleAuth(event) {
             event.preventDefault();
             const mobile = document.getElementById('mobile').value;
@@ -118,9 +112,7 @@
                     if (settings && settings.value) {
                         welcomeBonus = settings.value.welcome_bonus || 50;
                     }
-                } catch (err) {
-                    console.log("Using default welcome bonus");
-                }
+                } catch (err) {}
 
                 const { error } = await supabase.from('users').insert([{
                     user_id: userId,
@@ -138,7 +130,6 @@
                     return;
                 }
 
-                // Show Custom Alert Popup
                 const alertContent = document.getElementById('alert-content');
                 const customAlert = document.getElementById('custom-alert');
                 
@@ -153,7 +144,6 @@
                 if (customAlert) customAlert.classList.remove('hidden');
                 localStorage.setItem('currentUser', JSON.stringify({ user_id: userId, name, mobile, email }));
             } else {
-                // Login Logic
                 const { data, error } = await supabase.from('users').select('*').eq('mobile', mobile).eq('password', password).single();
                 if (error || !data) {
                     alert('Invalid Mobile Number or Password');
@@ -164,7 +154,6 @@
             }
         }
 
-        // Forgot Password Logic
         async function forgotPassword() {
             const inputVal = prompt("Enter your registered Mobile Number or Email:");
             if (!inputVal) return;
@@ -184,7 +173,7 @@
                 return;
             }
 
-            const subject = encodeURIComponent("Your EarnPro Password Recovery");
+            const subject = encodeURIComponent("Your Winpay Password Recovery");
             const body = encodeURIComponent(`Hello ${data.name},\n\nYour Account Details:\nUser ID: ${data.user_id}\nMobile: ${data.mobile}\nPassword: ${data.password}`);
             
             window.location.href = `mailto:${data.email}?subject=${subject}&body=${body}`;
